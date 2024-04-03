@@ -1,0 +1,44 @@
+<!-- templates/users/user_dashboard.html -->
+
+{% block content %}
+    <h2>User Dashboard</h2>
+    <h3>Upload File</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+    <h3>My Files</h3>
+    <ul>
+        {% for file in user_files %}
+            <li>
+                {{ file.file.name }}
+                <!-- download, share and delete options -->
+                <a href="{% url 'file_download' file.id %}">Download</a> |
+                <a href="{% url 'file_share' file.id %}">Share</a>
+                <form action="{% url 'file_delete' file.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% empty %}
+            <p>No files uploaded yet.</p>
+        {% endfor %}
+    </ul>
+
+    <h2>Files Shared With Me</h2>
+    <ul>
+        {% for file in shared_files %}
+            <li>{{ file.file.name }} - <a href="{% url 'file_download' file.id %}">Download</a></li>
+        {% empty %}
+            <p>No files shared with you.</p>
+        {% endfor %}
+    </ul>
+
+     <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+    </form>
+
+
+{% endblock %}

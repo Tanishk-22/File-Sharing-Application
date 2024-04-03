@@ -1,0 +1,17 @@
+<!-- templates/files/file_list.html -->
+{% for file in files %}
+    <p>{{ file.file.name }}</p>
+    <a href="{% url 'files:file_download' file.id %}">Download</a>
+{% empty %}
+    <p>No files uploaded yet.</p>
+{% endfor %}
+
+<form action="{% url 'files:share_file' file.id user_id %}" method="post">
+    {% csrf_token %}
+    <select name="user_id">
+        {% for user in users %}
+        <option value="{{ user.id }}">{{ user.username }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Share</button>
+</form>
